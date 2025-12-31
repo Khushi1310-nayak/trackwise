@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trackwise - Builder Tracker</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #020617;
+      --cyan: #06b6d4;
+      --neon-pink: #ec4899;
+      --neon-violet: #8b5cf6;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at top right, #083344, #020617);
+      background-attachment: fixed;
+      color: #f8fafc;
+      min-height: 100vh;
+    }
+    
+    /* Glassmorphism Buttons */
+    .glass-btn {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #000;
+      transition: all 0.3s ease;
+    }
+    .glass-btn:hover {
+      background: rgba(255, 255, 255, 1);
+      box-shadow: 0 0 20px rgba(236, 72, 153, 0.6);
+      transform: translateY(-1px);
+      color: #000;
+    }
+
+    /* Neon Violet Glow Cards */
+    .track-card {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(30, 41, 59, 0.8);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .track-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: var(--neon-violet);
+      box-shadow: 0 0 25px rgba(139, 92, 246, 0.4);
+      background: rgba(15, 23, 42, 0.8);
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--navy);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--cyan);
+    }
+    
+    .cyan-glow {
+      text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+    }
+
+    /* Select Dropdown Visibility Fix */
+    select {
+      color: #f8fafc !important;
+      background-color: rgba(255, 255, 255, 0.05) !important;
+    }
+    select option {
+      background-color: #0f172a !important;
+      color: #f8fafc !important;
+      padding: 10px;
+    }
+    /* For Firefox/IE compatibility */
+    select:focus {
+      outline: none;
+    }
+  </style>
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "recharts": "https://esm.sh/recharts@^3.6.0",
+    "@google/genai": "https://esm.sh/@google/genai@^1.34.0",
+    "react-router-dom": "https://esm.sh/react-router-dom@^7.11.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+  <div id="root"></div>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { 
   HashRouter as Router, 
@@ -149,7 +150,6 @@ const MobileNav: React.FC<{ activeTab: TrackType, onTabChange: (tab: TrackType) 
             activeTab === item.id ? 'text-cyan-400 bg-white/5 scale-105' : 'text-slate-500'
           }`}
         >
-          {/* Fix: Casting to React.ReactElement<any> to resolve TypeScript error where 'size' property is not recognized on generic ReactElement during cloneElement */}
           {React.cloneElement(item.icon as React.ReactElement<any>, { size: 18 })}
           <span className="text-[8px] sm:text-[10px] font-bold uppercase tracking-tighter truncate w-full text-center">{item.label}</span>
         </button>
@@ -196,9 +196,9 @@ const TechStackDisplay: React.FC<{ stack: TechStack }> = ({ stack }) => {
   return (
     <div className="flex flex-wrap gap-1 md:gap-2">
       {items.map((item, idx) => (
-        <div key={idx} className="flex items-center gap-1.5 px-2 py-0.5 md:py-1 rounded bg-white/5 border border-white/5" title={`${item.label}: ${item.value}`}>
+        <div key={idx} className="flex items-center gap-1.5 px-2 py-1 rounded bg-white/5 border border-white/5" title={`${item.label}: ${item.value}`}>
           <span className="text-cyan-400">{item.icon}</span>
-          <span className="text-[9px] font-black uppercase text-slate-300 truncate max-w-[50px] sm:max-w-[80px]">{item.value}</span>
+          <span className="text-[9px] font-black uppercase text-slate-300 truncate max-w-[60px] md:max-w-[80px]">{item.value}</span>
         </div>
       ))}
     </div>
@@ -703,10 +703,10 @@ export default function App() {
             <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => { setIsModalOpen(false); setEditingItem(null); }} />
             <div className="bg-slate-900 border border-white/10 rounded-[2rem] w-full max-w-xl relative z-10 shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300">
               <div className="p-6 md:p-8 border-b border-white/5 flex items-center justify-between">
-                <h3 className="text-lg md:text-xl font-black text-white uppercase tracking-tighter">{editingItem ? 'Update' : 'Register'} {modalType.slice(0, -1)}</h3>
-                <button onClick={() => { setIsModalOpen(false); setEditingItem(null); }} className="text-slate-400 hover:text-white transition-colors"><X size={20} /></button>
+                <h3 className="text-lg md:text-xl font-black text-white uppercase tracking-tighter">{editingItem ? 'Edit' : 'Add New'} {modalType.slice(0, -1)}</h3>
+                <button onClick={() => { setIsModalOpen(false); setEditingItem(null); }} className="text-slate-400 hover:text-white transition-colors"><X size={24} /></button>
               </div>
-              <form className="p-6 md:p-8 space-y-5 max-h-[70vh] overflow-y-auto custom-scrollbar" onSubmit={(e) => {
+              <form className="p-6 md:p-8 space-y-6 max-h-[70vh] overflow-y-auto custom-scrollbar" onSubmit={(e) => {
                 e.preventDefault();
                 const formData = new FormData(e.currentTarget);
                 const newItem: any = {};
@@ -721,52 +721,76 @@ export default function App() {
                 handleAddOrUpdate(modalType, newItem);
               }}>
                 {modalType === 'hackathons' && (
-                  <div className="space-y-4">
-                    <input name="name" defaultValue={editingItem?.name} placeholder="Hackathon Name" required className="w-full bg-white/5 border border-white/10 rounded-xl p-3.5 text-white text-sm outline-none focus:ring-1 focus:ring-cyan-500" />
-                    <input name="organizer" defaultValue={editingItem?.organizer} placeholder="Organizer (Devpost, MLH...)" className="w-full bg-white/5 border border-white/10 rounded-xl p-3.5 text-white text-sm outline-none" />
-                    <div className="grid grid-cols-2 gap-3">
-                      <select name="mode" defaultValue={editingItem?.mode || "Online"} className="bg-white/5 border border-white/10 rounded-xl p-3.5 text-white text-sm outline-none"><option value="Online">Online</option><option value="Offline">Offline</option><option value="Hybrid">Hybrid</option></select>
-                      <select name="type" defaultValue={editingItem?.type || "Solo"} className="bg-white/5 border border-white/10 rounded-xl p-3.5 text-white text-sm outline-none"><option value="Solo">Solo</option><option value="Team">Team</option></select>
-                    </div>
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="space-y-1"><label className="text-[9px] font-black text-slate-500 uppercase tracking-widest pl-1">Starts</label><input name="startDate" defaultValue={editingItem?.startDate} type="date" required className="w-full bg-white/5 border border-white/10 rounded-xl p-3.5 text-white text-xs outline-none" /></div>
-                      <div className="space-y-1"><label className="text-[9px] font-black text-slate-500 uppercase tracking-widest pl-1">Deadline</label><input name="deadline" defaultValue={editingItem?.deadline} type="date" required className="w-full bg-white/5 border border-white/10 rounded-xl p-3.5 text-white text-xs outline-none" /></div>
-                    </div>
-                    <div className="pt-4 border-t border-white/5 space-y-3">
-                      <p className="text-[9px] font-black text-cyan-400 uppercase tracking-widest">Tech Stack</p>
-                      <div className="grid grid-cols-2 gap-3">
-                        <input name="frontend" defaultValue={editingItem?.techStack?.frontend} placeholder="Frontend" className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white text-xs outline-none" />
-                        <input name="backend" defaultValue={editingItem?.techStack?.backend} placeholder="Backend" className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white text-xs outline-none" />
-                        <input name="databases" defaultValue={editingItem?.techStack?.databases} placeholder="DB" className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white text-xs outline-none" />
-                        <input name="apis" defaultValue={editingItem?.techStack?.apis} placeholder="APIs" className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white text-xs outline-none" />
+                  <div className="space-y-6">
+                    <div className="space-y-4">
+                      <input name="name" defaultValue={editingItem?.name} placeholder="Hackathon Name" required className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none" />
+                      <input name="organizer" defaultValue={editingItem?.organizer} placeholder="Organizer (e.g. Devpost, MLH)" className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white outline-none" />
+                      <div className="grid grid-cols-2 gap-4">
+                        <select name="mode" defaultValue={editingItem?.mode || "Online"} className="bg-white/5 border border-white/10 rounded-xl p-4 text-white outline-none cursor-pointer"><option value="Online">Online</option><option value="Offline">Offline</option><option value="Hybrid">Hybrid</option></select>
+                        <select name="type" defaultValue={editingItem?.type || "Solo"} className="bg-white/5 border border-white/10 rounded-xl p-4 text-white outline-none cursor-pointer"><option value="Solo">Solo</option><option value="Team">Team</option></select>
                       </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2"><label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Start Date</label><input name="startDate" defaultValue={editingItem?.startDate} type="date" required className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white outline-none" /></div>
+                        <div className="space-y-2"><label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Deadline</label><input name="deadline" defaultValue={editingItem?.deadline} type="date" required className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white outline-none" /></div>
+                      </div>
+                    </div>
+                    <div className="space-y-3 pt-4 border-t border-white/5">
+                      <p className="text-[10px] font-black text-cyan-400 uppercase tracking-[0.2em]">Architecture Details</p>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input name="frontend" defaultValue={editingItem?.techStack?.frontend} placeholder="Frontend (React, Tailwind...)" className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white outline-none text-sm" />
+                        <input name="backend" defaultValue={editingItem?.techStack?.backend} placeholder="Backend (Node.js, Go...)" className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white outline-none text-sm" />
+                        <input name="databases" defaultValue={editingItem?.techStack?.databases} placeholder="Databases (MongoDB, SQL...)" className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white outline-none text-sm" />
+                        <input name="apis" defaultValue={editingItem?.techStack?.apis} placeholder="APIs (Stripe, Twilio...)" className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white outline-none text-sm" />
+                        <input name="devops" defaultValue={editingItem?.techStack?.devops} placeholder="DevOps (Docker, Vercel...)" className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white outline-none text-sm md:col-span-2" />
+                      </div>
+                    </div>
+                    <div className="space-y-4">
+                      <input name="repoUrl" defaultValue={editingItem?.repoUrl} placeholder="Github Repo URL" className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white outline-none" />
+                      <select name="status" defaultValue={editingItem?.status || HackathonStatus.REGISTERED} className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white outline-none cursor-pointer">{Object.values(HackathonStatus).map(s => <option key={s} value={s}>{s}</option>)}</select>
                     </div>
                   </div>
                 )}
-                {/* Simplified Project & Internship forms for brevity, mirroring the structure above */}
                 {modalType === 'projects' && (
-                  <div className="space-y-4">
-                    <input name="title" defaultValue={editingItem?.title} placeholder="Project Title" required className="w-full bg-white/5 border border-white/10 rounded-xl p-3.5 text-white text-sm outline-none" />
-                    <textarea name="description" defaultValue={editingItem?.description} placeholder="Short brief..." className="w-full bg-white/5 border border-white/10 rounded-xl p-3.5 text-white text-sm outline-none h-20" />
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4 border-t border-white/5">
-                      <input name="frontend" defaultValue={editingItem?.techStack?.frontend} placeholder="Frontend" className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white text-xs outline-none" />
-                      <input name="backend" defaultValue={editingItem?.techStack?.backend} placeholder="Backend" className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white text-xs outline-none" />
-                      <input name="databases" defaultValue={editingItem?.techStack?.databases} placeholder="Database" className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white text-xs outline-none" />
-                      <input name="progress" defaultValue={editingItem?.progress || 10} type="number" min="0" max="100" className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white text-xs outline-none" />
+                  <div className="space-y-6">
+                    <div className="space-y-4">
+                      <input name="title" defaultValue={editingItem?.title} placeholder="Project Title" required className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white outline-none" />
+                      <select name="type" defaultValue={editingItem?.type || "Personal"} className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white outline-none cursor-pointer"><option value="Personal">Personal</option><option value="Hackathon">Hackathon</option><option value="Internship">Internship</option><option value="Freelance">Freelance</option></select>
+                      <textarea name="description" defaultValue={editingItem?.description} placeholder="Short description..." className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white outline-none h-24" />
+                    </div>
+                    <div className="space-y-3 pt-4 border-t border-white/5">
+                      <p className="text-[10px] font-black text-indigo-400 uppercase tracking-[0.2em]">Technology Breakdown</p>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input name="frontend" defaultValue={editingItem?.techStack?.frontend} placeholder="Frontend (React, Vue...)" className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white outline-none text-sm" />
+                        <input name="backend" defaultValue={editingItem?.techStack?.backend} placeholder="Backend (FastAPI, Express...)" className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white outline-none text-sm" />
+                        <input name="databases" defaultValue={editingItem?.techStack?.databases} placeholder="Databases (Supabase, Postgres...)" className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white outline-none text-sm" />
+                        <input name="apis" defaultValue={editingItem?.techStack?.apis} placeholder="APIs (GraphQL, REST...)" className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white outline-none text-sm" />
+                        <input name="devops" defaultValue={editingItem?.techStack?.devops} placeholder="DevOps (Kubernetes, AWS...)" className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white outline-none text-sm md:col-span-2" />
+                      </div>
+                    </div>
+                    <div className="space-y-4">
+                      <div className="space-y-2"><label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Initial Progress %</label><input name="progress" defaultValue={editingItem?.progress || 10} type="number" min="0" max="100" className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white outline-none" /></div>
+                      <input name="repoUrl" defaultValue={editingItem?.repoUrl} placeholder="Repo URL" className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white outline-none" />
+                      <input name="demoUrl" defaultValue={editingItem?.demoUrl} placeholder="Live Demo URL" className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white outline-none" />
+                      <select name="status" defaultValue={editingItem?.status || ProjectStatus.IDEA} className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white outline-none cursor-pointer">{Object.values(ProjectStatus).map(s => <option key={s} value={s}>{s}</option>)}</select>
                     </div>
                   </div>
                 )}
                 {modalType === 'internships' && (
                   <div className="space-y-4">
-                    <input name="company" defaultValue={editingItem?.company} placeholder="Company Name" required className="w-full bg-white/5 border border-white/10 rounded-xl p-3.5 text-white text-sm outline-none" />
-                    <input name="role" defaultValue={editingItem?.role} placeholder="Role (e.g. SDE Intern)" required className="w-full bg-white/5 border border-white/10 rounded-xl p-3.5 text-white text-sm outline-none" />
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="space-y-1"><label className="text-[9px] font-black text-slate-500 uppercase tracking-widest pl-1">Applied Date</label><input name="appliedDate" defaultValue={editingItem?.appliedDate} type="date" required className="w-full bg-white/5 border border-white/10 rounded-xl p-3.5 text-white text-xs outline-none" /></div>
-                      <div className="flex items-center gap-3 pt-4"><input name="isPaid" defaultChecked={editingItem?.isPaid} type="checkbox" className="w-5 h-5 bg-white/5 border-white/10 rounded accent-cyan-400" /><span className="text-xs font-bold text-slate-300">Paid Role</span></div>
+                    <input name="company" defaultValue={editingItem?.company} placeholder="Company Name" required className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white outline-none" />
+                    <input name="role" defaultValue={editingItem?.role} placeholder="Role (e.g. Frontend Engineer)" required className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white outline-none" />
+                    <div className="grid grid-cols-2 gap-4">
+                      <input name="platform" defaultValue={editingItem?.platform} placeholder="Platform (LinkedIn...)" className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white outline-none" />
+                      <input name="location" defaultValue={editingItem?.location} placeholder="Location" className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white outline-none" />
                     </div>
+                    <div className="grid grid-cols-2 gap-4 items-center px-2">
+                      <label className="flex items-center gap-3 cursor-pointer"><input name="isPaid" defaultChecked={editingItem?.isPaid} type="checkbox" className="w-5 h-5 bg-white/5 border-white/10 rounded accent-cyan-400" /><span className="text-sm font-bold text-slate-300">Paid Role</span></label>
+                      <div className="space-y-1"><label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Application Date</label><input name="appliedDate" defaultValue={editingItem?.appliedDate} type="date" required className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white outline-none" /></div>
+                    </div>
+                    <select name="status" defaultValue={editingItem?.status || InternshipStatus.APPLIED} className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white outline-none cursor-pointer">{Object.values(InternshipStatus).map(s => <option key={s} value={s}>{s}</option>)}</select>
                   </div>
                 )}
-                <button type="submit" className="w-full glass-btn font-black text-[10px] uppercase tracking-[0.2em] py-4 rounded-xl mt-4 active:scale-95 transition-all">Submit Track Entry</button>
+                <button type="submit" className="w-full glass-btn font-black text-xs uppercase tracking-[0.2em] py-5 rounded-2xl mt-4 active:scale-95 transition-all">Confirm Tracking Entry</button>
               </form>
             </div>
           </div>
